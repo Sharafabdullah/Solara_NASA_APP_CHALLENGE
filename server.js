@@ -214,8 +214,8 @@ app.post('/api/process-image', upload.single('image'), async (req, res) => {
       return res.status(400).json({ error: 'Prompt is required' });
     }
 
-    // Read the uploaded file
-    const imagePath = path.join(__dirname, 'uploads', req.file.filename);
+    // Read the uploaded file - use the correct uploads directory
+    const imagePath = path.join(uploadsDir, req.file.filename);
     const imageBuffer = fs.readFileSync(imagePath);
     const base64Image = imageBuffer.toString('base64');
     const dataUri = `data:${req.file.mimetype};base64,${base64Image}`;

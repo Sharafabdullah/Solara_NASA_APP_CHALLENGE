@@ -17,7 +17,9 @@ app.use(express.json());
 app.use(express.static('public'));
 
 // Use /tmp for Vercel serverless or uploads for local
-const uploadsDir = process.env.VERCEL ? '/tmp' : path.join(__dirname, 'uploads');
+const uploadsDir = process.env.VERCEL
+  ? '/tmp'
+  : path.join(__dirname, 'uploads');
 
 // Create uploads directory if it doesn't exist (only for local)
 if (!process.env.VERCEL && !fs.existsSync(uploadsDir)) {

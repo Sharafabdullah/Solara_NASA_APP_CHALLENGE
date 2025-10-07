@@ -15,9 +15,5 @@
       "src": "/(.*)",
       "dest": "server.js"
     }
-  ],
-  "env": {
-    "REPLICATE_API_TOKEN": "@replicate_api_token",
-    "GEMINI_API_KEY": "@gemini_api_key"
-  }
+  ]
 }

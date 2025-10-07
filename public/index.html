@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Solara - AI Weather Image Transformer</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <img
+          src="logos_and_imgs/logo_yellow.svg"
+          alt="Solara Logo"
+          class="logo"
+        />
+        <h1>Solara</h1>
+        <p>Transform your images with AI-powered weather effects</p>
+      </header>
+
+      <main>
+        <!-- Upload Image and Set Details -->
+        <section class="section">
+          <h2>Upload Your Image</h2>
+          <div class="upload-area" id="uploadArea">
+            <input type="file" id="imageInput" accept="image/*" hidden />
+            <div class="upload-content">
+              <svg
+                width="64"
+                height="64"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="17 8 12 3 7 8"></polyline>
+                <line x1="12" y1="3" x2="12" y2="15"></line>
+              </svg>
+              <p>Click to upload or drag and drop</p>
+              <span>PNG, JPG, JPEG up to 10MB</span>
+            </div>
+            <img id="imagePreview" class="image-preview" alt="Preview" />
+          </div>
+        </section>
+
+        <!-- Location and Time -->
+        <section class="section">
+          <h2>Set Location & Date/Time</h2>
+          <div class="form-group">
+            <label for="location">
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                <circle cx="12" cy="10" r="3"></circle>
+              </svg>
+              Location
+            </label>
+            <input
+              type="text"
+              id="location"
+              placeholder="e.g., New York, Paris, Tokyo"
+              required
+            />
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="date">
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                  <line x1="16" y1="2" x2="16" y2="6"></line>
+                  <line x1="8" y1="2" x2="8" y2="6"></line>
+                  <line x1="3" y1="10" x2="21" y2="10"></line>
+                </svg>
+                Date
+              </label>
+              <input type="date" id="date" required />
+            </div>
+            <div class="form-group">
+              <label for="time">
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <polyline points="12 6 12 12 16 14"></polyline>
+                </svg>
+                Time
+              </label>
+              <input type="time" id="time" required />
+            </div>
+          </div>
+
+          <!-- Process Button -->
+          <button id="processBtn" class="btn btn-primary" disabled>
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path>
+            </svg>
+            Transform Image
+          </button>
+        </section>
+
+        <!-- Loading Indicator -->
+        <div
+          id="loadingIndicator"
+          class="loading-container"
+          style="display: none"
+        >
+          <div class="spinner"></div>
+          <p id="loadingText">Processing...</p>
+        </div>
+
+        <!-- Results - Image Below Input -->
+        <section id="resultsSection" class="section" style="display: none">
+          <h2>Weather-Transformed Image</h2>
+          <div class="result-image-container">
+            <img id="modifiedImage" alt="Weather Modified" />
+            <a
+              id="downloadBtn"
+              class="btn btn-download"
+              download
+              style="display: none"
+            >
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="7 10 12 15 17 10"></polyline>
+                <line x1="12" y1="15" x2="12" y2="3"></line>
+              </svg>
+              Download Image
+            </a>
+          </div>
+        </section>
+
+        <!-- Weather Info -->
+        <section id="weatherSection" class="section" style="display: none">
+          <h2>Weather Information</h2>
+          <div id="weatherInfo" class="weather-info"></div>
+        </section>
+
+        <!-- Weather Charts -->
+        <section id="chartsSection" class="section" style="display: none">
+          <h2>24-Hour Weather Forecast</h2>
+          <div class="charts-grid">
+            <div class="chart-container">
+              <canvas id="temperatureChart"></canvas>
+            </div>
+            <div class="chart-container">
+              <canvas id="precipitationChart"></canvas>
+            </div>
+          </div>
+        </section>
+
+        <!-- Prompt Display -->
+        <section id="promptSection" class="section" style="display: none">
+          <div class="prompt-display">
+            <h3>Generated AI Prompt</h3>
+            <p id="promptText"></p>
+          </div>
+        </section>
+      </main>
+
+      <footer>
+        <p>Powered by Solara | NASA Space Apps Challenge 2024</p>
+      </footer>
+    </div>
+
+    <script src="app.js"></script>
+  </body>
+</html>
